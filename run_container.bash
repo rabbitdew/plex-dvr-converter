@@ -1,4 +1,6 @@
 #!/bin/bash
+IFS=":"
+TS_PATH=$1
 
 [[ -d ./log ]] || mkdir ./log
 
@@ -7,4 +9,5 @@ docker run \
 	--name video-transcoder \
 	-v ${PWD}/log:/var/log/video-transcoder \
 	-v /mnt:/mnt \
-	plex-dvr-convertor:0 \
+	-e TS_PATH="${TS_PATH}" \
+	localhost/plex-dvr-converter:0 \
