@@ -4,7 +4,13 @@ import argparse
 import sys
 import os
 import glob
+import logging
 import ffmpy
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
 
 def create_arg_parser():
     """Creates and returns the ArgumentParser object."""
@@ -49,11 +55,17 @@ def check_file(inputFile, deleteOriginal):
             os.remove(inputFile)
 
 if __name__ == "__main__":
+    logging.info('Running main method')
     arg_parser = create_arg_parser()
     parsed_args = arg_parser.parse_args(sys.argv[1:])
+    logging.info('Path specified as: ' + str(parsed_args.inputDirectory))
     if os.path.exists(parsed_args.inputDirectory):
        files = list_files(parsed_args.inputDirectory)
        files.sort()
+       logging.info('Found these files:' )
+       logging.info('\n'.join(map(str, files)))
        for f in files:
            transcode_file(f)
            check_file(f, parsed_args.deleteOriginal)
+    else:
+        logging.info("Path does not exist!")
